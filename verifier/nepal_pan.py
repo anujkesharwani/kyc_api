@@ -1,6 +1,7 @@
 import re
 
 from lib.base import BaseVerifier
+from lib.basic_utils import extract_captcha_value
 from lib.verifire_utils.payload import pay_load_info
 
 
@@ -39,10 +40,8 @@ class ChildClass(BaseVerifier):
 
         # captcha = self.clean_text_with_regex(' '.join(tree.xpath("//div[@id='mid']//label/text()")))
         captcha = tree.xpath("//div[@id='mid']/label/text()")[0].strip()
-
-        print("CAPTCHA Prompt: ", captcha)
-        self.captcha = input("Please enter the CAPTCHA: ")
-        return self.query_info(response.content)
+        captcha_value = extract_captcha_value(captcha)
+        return self.query_info(captcha_value)
 
     def query_info(self,content):
         payload = pay_load_info(self.pan, self._token, self.captcha)
